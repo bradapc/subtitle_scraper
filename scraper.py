@@ -34,3 +34,17 @@ def downloadSubtitle(sub_link, search_request):
     r = requests.get(sub_link)
     file_name = f"{search_request} Subtitles"
     open(file_name, 'wb').write(r.content)
+
+def userSearchSubtitles():
+    search_query = ''
+    while not search_query:
+        print("Enter a movie to find subtitles.")
+        search_query = input()
+        movie_results = searchForMovie(search_query)
+        if(not movie_results):
+            print("Movie could not be found. Please try again.")
+            search_query = ''
+
+
+if __name__ == "__main__":
+    userSearchSubtitles()
