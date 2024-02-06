@@ -30,10 +30,11 @@ def getSubOptions(subdl_url):
                 subtitles[elem.text] = elem['href']
     return subtitles
 
-def downloadSubtitle(sub_link, search_request):
+def downloadSubtitle(sub_link, search_query):
     r = requests.get(sub_link)
-    file_name = f"{search_request} Subtitles"
+    file_name = f"{search_query} Subtitles"
     open(file_name, 'wb').write(r.content)
+    print(f"Successfully downloaded {search_query} subtitles.")
 
 def userSearchSubtitles():
     search_query = ''
@@ -44,6 +45,37 @@ def userSearchSubtitles():
         if(not movie_results):
             print("Movie could not be found. Please try again.")
             search_query = ''
+    userChooseSubtitle(movie_results, search_query)
+
+def userChooseSubtitle(movie_results, search_query):
+    print(f"Getting results for {search_query}")
+    subtitles = getSubOptions(movie_results)
+    subtitles_indexed = []
+    response = ''
+    for key in subtitles:
+        subtitles_indexed.append({key: subtitles[key]})
+    for item in range(len(subtitles_indexed)):
+        print(f"{item + 1}: {"".join([key for key in subtitles_indexed[item]])}")
+    print(f"Found {len(subtitles)} subtitles in search.")
+    print("Select a number to download the file.")
+    while not response:
+        response = input()
+        try:
+            response = int(response)
+            if(response not in range(1, len(subtitles_indexed) + 1)):
+                print("The number you have selected is invalid.")
+                response = ''
+                continue
+            else:
+                break
+        except:
+            print("You must select a number to download subtitle.")
+            response = ''
+            continue
+    selected_subtitle = subtitles_indexed[response - 1]
+    selected_subtitle = list(selected_subtitle.values())[0]
+    downloadSubtitle(selected_subtitle, search_query)
+    
 
 
 if __name__ == "__main__":
