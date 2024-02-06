@@ -29,3 +29,8 @@ def getSubOptions(subdl_url):
             if(".zip" in elem['href']):
                 subtitles[elem.text] = elem['href']
     return subtitles
+
+def downloadSubtitle(sub_link, search_request):
+    r = requests.get(sub_link)
+    file_name = f"{search_request} Subtitles"
+    open(file_name, 'wb').write(r.content)
