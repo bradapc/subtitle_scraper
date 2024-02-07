@@ -2,6 +2,7 @@ import googlesearch
 import requests
 import re
 from bs4 import BeautifulSoup
+import zipfile, os
 
 def searchForMovie(search_request):
     subdl_request = search_request + ' subdl'
@@ -15,8 +16,7 @@ def searchForMovie(search_request):
         print("Could not find result with that movie title.")
     if(subdl_url):
         return subdl_url
-    else:
-        return ''
+    return ''
     
 def getSubOptions(subdl_url):
     subtitles = {}
@@ -32,9 +32,17 @@ def getSubOptions(subdl_url):
 
 def downloadSubtitle(sub_link, search_query):
     r = requests.get(sub_link)
-    file_name = f"{search_query} Subtitles"
+    file_name = f"{search_query} Subtitles.zip"
     open(file_name, 'wb').write(r.content)
     print(f"Successfully downloaded {search_query} subtitles.")
+    extractZip(file_name)
+
+def extractZip(file_name):
+    dir = os.getcwd() + '/' + file_name
+    with zipfile.ZipFile(dir, 'r') as zip_ref:
+        zip_ref.extractall(os.getcwd())
+    os.remove(file_name)
+    print("Extracted .srt file from zip.")
 
 def userSearchSubtitles():
     search_query = ''
