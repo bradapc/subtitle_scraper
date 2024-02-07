@@ -14,7 +14,8 @@ def searchForMovie(search_request):
             break
     else:
         print("Could not find result with that movie title.")
-    if(subdl_url):
+    test_url = requests.get(subdl_url)
+    if(test_url.status_code != 404):
         return subdl_url
     return ''
     
@@ -53,7 +54,9 @@ def userSearchSubtitles():
         if(not movie_results):
             print("Movie could not be found. Please try again.")
             search_query = ''
-    userChooseSubtitle(movie_results, search_query)
+            continue
+        else:
+            userChooseSubtitle(movie_results, search_query)
 
 def userChooseSubtitle(movie_results, search_query):
     print(f"Getting results for {search_query}")
